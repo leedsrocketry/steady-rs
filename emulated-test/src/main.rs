@@ -34,9 +34,6 @@ fn main() {
 
     // Read packets from Fluctus
     loop {
-        // let ping_command = PingCommand::new();
-        // transport.send_command(&ping_command).unwrap();
-
         match transport.read_packet() {
             Ok(packet) => {
                 println!("Status: {:?}", packet.status);
