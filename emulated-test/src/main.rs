@@ -5,7 +5,7 @@ use steady_rs::steady::commands::start::Band;
 use std::{thread, time::Duration};
 
 fn main() {
-    // Create a single transport instance outside the loop
+    // Create serial transport instance
     let mut transport = match SerialTransport::new("/dev/tty.usbmodem1101", 115200) {
         Ok(t) => t,
         Err(e) => {
@@ -14,9 +14,11 @@ fn main() {
         }
     };
 
+    // Send start command to connect Steady to Fluctus
     let start_command = StartCommand::new(Band::EU, 0, "Fluctus".to_string()).unwrap();
     transport.send_command(&start_command).unwrap();
 
+    // Read packets from Fluctus
     loop {
         match transport.read_packet() {
             Ok(packet) => {
@@ -26,8 +28,5 @@ fn main() {
                 eprintln!("Error reading packet: {}", e);
             }
         }
-
-        // Add a small delay to avoid hammering the CPU
-        // thread::sleep(Duration::from_millis(100));
     }
 }

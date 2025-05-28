@@ -11,3 +11,5 @@ This aims to fully implement the interface as specified in the [inital documenta
 Shoutout to Ulysse from Silicdyne, who created documentation specifically for this very specific usecase we had.
 
 We are using this to feed live flight data into our custom unified ground station solution.
+
+There is relevant example code in emulated-test/src/main.rs.
