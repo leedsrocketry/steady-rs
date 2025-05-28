@@ -1,5 +1,7 @@
 use std::str::FromStr;
+use serde::Serialize;
 
+#[derive(Debug, PartialEq, Eq, Clone, Copy, Serialize)]
 pub enum RollingMessage {
     MaxAltitude(i32),
     MaxSpeedVert(i16),
@@ -9,7 +11,7 @@ pub enum RollingMessage {
     Unknown(u8, [u8; 3]),
 }
 
-#[derive(Debug, PartialEq, Eq, Clone, Copy)]
+#[derive(Debug, PartialEq, Eq, Clone, Copy, Serialize)]
 pub enum FlightStatus {
     Idle,
     Armed,
@@ -21,6 +23,7 @@ pub enum FlightStatus {
     Unknown(u8), // For any unrecognised status codes (error state tho)
 }
 
+#[derive(Debug, PartialEq, Eq, Clone, Copy, Serialize)]
 pub struct FluctusPacket {
     pub uid: u16,
     pub fw: u16,
