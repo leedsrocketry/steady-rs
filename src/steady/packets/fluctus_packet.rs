@@ -82,7 +82,9 @@ fn convert_to_bytes(hex_str: &str) -> Vec<u8> {
 
 pub trait FromBytes {
     type Err;
-    fn from_bytes(bytes: &[u8]) -> Result<Self, Self::Err> where Self: Sized;
+    fn from_bytes(bytes: &[u8]) -> Result<Self, Self::Err>
+    where
+        Self: Sized;
 }
 
 impl FromStr for FluctusPacket {
@@ -125,7 +127,7 @@ impl FromBytes for FluctusPacket {
         let batt_voltage = i16::from_le_bytes([bytes[18], bytes[19]]);
         let time = i16::from_le_bytes([bytes[20], bytes[21]]) / 10; // Convert from f16 to i16
         let pyro_states = bytes[22];
-        let log_status = bytes[23] as i8; 
+        let log_status = bytes[23] as i8;
         let gps_lat = i32::from_le_bytes([bytes[24], bytes[25], bytes[26], bytes[27]]) / 1_000_000;
         let gps_lng = i32::from_le_bytes([bytes[28], bytes[29], bytes[30], bytes[31]]) / 1_000_000;
         let gps_state = bytes[32] as i8;
@@ -134,7 +136,9 @@ impl FromBytes for FluctusPacket {
         let rolling_message_type = bytes[34];
         let rolling_message = match rolling_message_type {
             b'A' => {
-                if bytes.len() < 38 { return Err("Packet too short for MaxAltitude".into()); }
+                if bytes.len() < 38 {
+                    return Err("Packet too short for MaxAltitude".into());
+                }
                 // Read 3 bytes into a 32 bit integer (LE)
                 let b = [bytes[35], bytes[36], bytes[37]];
                 let raw = ((b[2] as i32) << 16) | ((b[1] as i32) << 8) | (b[0] as i32);
@@ -144,9 +148,11 @@ impl FromBytes for FluctusPacket {
                     raw
                 };
                 RollingMessage::MaxAltitude(max_altitude)
-            },
+            }
             b'S' => {
-                if bytes.len() < 38 { return Err("Packet too short for MaxSpeedVert".into()); }
+                if bytes.len() < 38 {
+                    return Err("Packet too short for MaxSpeedVert".into());
+                }
                 let b = [bytes[35], bytes[36], bytes[37]];
                 let raw = ((b[2] as i32) << 16) | ((b[1] as i32) << 8) | (b[0] as i32);
                 let max_speed_vert = if (raw & 0x800000) != 0 {
@@ -155,9 +161,11 @@ impl FromBytes for FluctusPacket {
                     raw
                 };
                 RollingMessage::MaxSpeedVert(max_speed_vert as i16)
-            },
+            }
             b'G' => {
-                if bytes.len() < 38 { return Err("Packet too short for MaxAccelGlob".into()); }
+                if bytes.len() < 38 {
+                    return Err("Packet too short for MaxAccelGlob".into());
+                }
                 let b = [bytes[35], bytes[36], bytes[37]];
                 let raw = ((b[2] as i32) << 16) | ((b[1] as i32) << 8) | (b[0] as i32);
                 let max_accel_glob = if (raw & 0x800000) != 0 {
@@ -166,7 +174,7 @@ impl FromBytes for FluctusPacket {
                     raw
                 };
                 RollingMessage::MaxAccelGlob(max_accel_glob as i16)
-            },
+            }
             _ => RollingMessage::Unknown(rolling_message_type, [0; 3]), // Placeholder for unknown
         };
 

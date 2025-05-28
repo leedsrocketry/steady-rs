@@ -1,8 +1,6 @@
 use super::command::Command;
 
-pub struct PingCommand {
-
-}
+pub struct PingCommand {}
 
 impl PingCommand {
     pub fn new() -> Self {
@@ -19,7 +17,7 @@ impl Command for PingCommand {
         if command != "ping\n" {
             return Err("Invalid command format: expected 'ping\\n'".to_string());
         }
-        
+
         return Ok(PingCommand {});
     }
 }
