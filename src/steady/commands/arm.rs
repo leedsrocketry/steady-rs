@@ -1,8 +1,6 @@
 use super::command::Command;
 
-pub struct ArmCommand {
-
-}
+pub struct ArmCommand {}
 
 impl ArmCommand {
     pub fn new() -> Self {
@@ -19,7 +17,7 @@ impl Command for ArmCommand {
         if command != "arm\n" {
             return Err("Invalid command format: expected 'arm\\n'".to_string());
         }
-        
+
         return Ok(ArmCommand {});
     }
 }

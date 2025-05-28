@@ -21,7 +21,7 @@ impl Band {
             Band::EU => 1,
         }
     }
-    
+
     pub fn from_str(value: &str) -> Result<Self, String> {
         match value {
             "US" => Ok(Band::US),
@@ -40,7 +40,6 @@ pub struct StartCommand {
 
 impl StartCommand {
     pub fn new(band: Band, chan: u16, device: String) -> Result<Self, String> {
-
         if chan > 25 {
             return Err("Channel value out of range".to_string());
         }
@@ -48,11 +47,7 @@ impl StartCommand {
             return Err("Invalid device name".to_string());
         }
 
-        return Ok(StartCommand {
-            band,
-            chan,
-            device,
-        })
+        return Ok(StartCommand { band, chan, device });
     }
 }
 
@@ -76,12 +71,16 @@ impl Command for StartCommand {
 
         // Parse band
         let band_char = chars.next().ok_or("Missing band value".to_string())?;
-        let band_u8 = band_char.to_digit(10).ok_or("Invalid band character".to_string())? as u8;
+        let band_u8 = band_char
+            .to_digit(10)
+            .ok_or("Invalid band character".to_string())? as u8;
         let band = Band::from_u8(band_u8)?;
 
         // Parse channel
         let chan_str: String = chars.by_ref().take(2).collect();
-        let chan: u16 = chan_str.parse::<u16>().map_err(|_| "Invalid channel format".to_string())?;
+        let chan: u16 = chan_str
+            .parse::<u16>()
+            .map_err(|_| "Invalid channel format".to_string())?;
 
         // Parse device
         let device_str: String = chars.take_while(|&c| c != '\n').collect();
