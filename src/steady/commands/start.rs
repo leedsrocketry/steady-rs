@@ -40,9 +40,6 @@ pub struct StartCommand {
 
 impl StartCommand {
     pub fn new(band: Band, chan: u16, device: String) -> Result<Self, String> {
-        if chan == 0 {
-            return Err("Channel cannot be 0".to_string());
-        }
 
         if chan > 25 {
             return Err("Channel value out of range".to_string());
