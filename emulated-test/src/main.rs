@@ -1,6 +1,8 @@
 use steady_rs::steady::transport::serial::SerialTransport;
 use steady_rs::steady::commands::command::Command;
 use steady_rs::steady::commands::start::StartCommand;
+use steady_rs::steady::commands::ping::PingCommand;
+use steady_rs::steady::commands::arm::ArmCommand;
 use steady_rs::steady::commands::start::Band;
 use std::{thread, time::Duration};
 
@@ -18,11 +20,23 @@ fn main() {
     let start_command = StartCommand::new(Band::EU, 0, "Fluctus".to_string()).unwrap();
     transport.send_command(&start_command).unwrap();
 
+    match transport.read_packet() {
+        Ok(packet) => {
+            println!("Status: {:?}", packet.status);
+        },
+        Err(e) => {
+            eprintln!("Error reading packet: {}", e);
+        }
+    }
+
+    let arm_command = ArmCommand::new();
+    transport.send_command(&arm_command).unwrap();
+
     // Read packets from Fluctus
     loop {
         match transport.read_packet() {
             Ok(packet) => {
-                println!("Acceleration: {}", packet.accel);
+                println!("Status: {:?}", packet.status);
             },
             Err(e) => {
                 eprintln!("Error reading packet: {}", e);
