@@ -1,3 +1,4 @@
+use super::command::Command;
 
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]
 pub enum Band {
@@ -56,8 +57,10 @@ impl StartCommand {
             device,
         })
     }
+}
 
-    pub fn to_string(&self) -> String {
+impl Command for StartCommand {
+    fn to_string(&self) -> String {
         format!(
             "start{}{:02}{}{}",
             self.band.to_u8(),
@@ -67,7 +70,7 @@ impl StartCommand {
         )
     }
 
-    pub fn from_string(command: &str) -> Result<Self, String> {
+    fn from_string(command: &str) -> Result<Self, String> {
         if !command.starts_with("start") {
             return Err("Invalid command format: does not start with 'start'".to_string());
         }
@@ -89,5 +92,4 @@ impl StartCommand {
 
         StartCommand::new(band, chan, device)
     }
-
 }

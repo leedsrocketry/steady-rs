@@ -3,9 +3,9 @@ pub use steady::packets::fluctus_packet::FluctusPacket;
 pub use steady::packets::fluctus_packet::FlightStatus;
 
 pub use steady::commands::start::StartCommand;
-
-pub use steady::responses::response::SteadyReply;
-
+pub use steady::commands::command::Command;
+pub use steady::responses::response::SteadyReply; 
+pub use steady::transport::serial::SerialTransport;
 
 // All test cases taken from the documentation
 // http://silicdyne.net//resources/docs/fluctus_sgs_interface_protocol_1_7b.pdf
@@ -18,7 +18,7 @@ mod tests {
 
     #[test]
     fn test_provided_packet() {
-        let packet = "FB3E00070100BEDD01000000000000006C00AA89109CFF00650000000000000000000E53000000|Grssi-65/Gsnr6";
+        let packet: &'static str = "FB3E00070100BEDD01000000000000006C00AA89109CFF00650000000000000000000E53000000|Grssi-65/Gsnr6";
         let parsed_packet = FluctusPacket::from_str(packet);
         assert!(parsed_packet.is_ok(), "Failed to parse packet: {:?}", parsed_packet.err());
         let packet = parsed_packet.unwrap();
@@ -68,10 +68,4 @@ mod tests {
         let reply: SteadyReply = steady_reply.unwrap();
         assert_eq!(reply.firmware_id, 123, "Firmware ID does not match expected value");
     }
-    
 }
-
-
-// fn main() {
-//     println!("Hello, world!");
-// }
