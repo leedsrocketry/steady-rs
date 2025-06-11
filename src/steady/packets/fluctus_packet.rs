@@ -125,14 +125,14 @@ impl FromBytes for FluctusPacket {
             }
         };
         let speed_vert = i16::from_le_bytes([bytes[13], bytes[14]]);
-        let accel = i16::from_le_bytes([bytes[15], bytes[16]]) / 10; // Convert from f16 to i16
+        let accel = i16::from_le_bytes([bytes[15], bytes[16]]); // Convert from f16 to i16
         let angle = bytes[17];
         let batt_voltage = i16::from_le_bytes([bytes[18], bytes[19]]);
-        let time = i16::from_le_bytes([bytes[20], bytes[21]]) / 10; // Convert from f16 to i16
+        let time = i16::from_le_bytes([bytes[20], bytes[21]]); // Convert from f16 to i16
         let pyro_states = bytes[22];
         let log_status = bytes[23] as i8;
-        let gps_lat = i32::from_le_bytes([bytes[24], bytes[25], bytes[26], bytes[27]]) / 1_000_000;
-        let gps_lng = i32::from_le_bytes([bytes[28], bytes[29], bytes[30], bytes[31]]) / 1_000_000;
+        let gps_lat = i32::from_le_bytes([bytes[24], bytes[25], bytes[26], bytes[27]]);
+        let gps_lng = i32::from_le_bytes([bytes[28], bytes[29], bytes[30], bytes[31]]);
         let gps_state = bytes[32] as i8;
         let warn_code = bytes[33];
 
