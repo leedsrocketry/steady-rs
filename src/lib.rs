@@ -1,6 +1,7 @@
 pub mod steady;
 pub use steady::packets::fluctus_packet::FlightStatus;
 pub use steady::packets::fluctus_packet::FluctusPacket;
+pub use steady::packets::fluctus_packet::RollingMessage;
 
 pub use steady::commands::command::Command;
 pub use steady::commands::start::StartCommand;
