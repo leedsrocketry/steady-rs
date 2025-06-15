@@ -50,12 +50,51 @@ pub struct FluctusPacket {
     pub user_in2: Option<i16>,
 }
 
-fn strip_code(code: &str) -> Result<String, String> {
+pub struct FluctusPacketMeta {
+    pub rssi: i16,
+    pub snr: i16,
+}
+
+impl FromStr for FluctusPacketMeta {
+    type Err = Box<dyn std::error::Error>;
+    fn from_str(code: &str) -> Result<Self, Self::Err> {
+        let meta = extract_meta(code)?;
+        Ok(meta)
+    }
+}
+
+fn extract_meta(code: &str) -> Result<FluctusPacketMeta, String> {
+    let meta_section = match code.split('|').nth(1) {
+        Some(s) => s,
+        None => return Err("missing meta section (expected text like Grssi‑65/Gsnr6)".into()),
+    };  
+    let meta_parts: Vec<&str> = meta_section.split('/').collect();
+
+    let rssi_str = meta_parts.get(0).copied().unwrap_or("Grssi0");
+    let snr_str = meta_parts.get(1).copied().unwrap_or("Gsnr1");
+
+    // Strip prefixes and parse values
+    let rssi = rssi_str.strip_prefix("Grssi")
+        .ok_or_else(|| format!("Invalid rssi format: '{}'", rssi_str))?
+        .parse::<i16>()
+        .map_err(|e| format!("Failed to parse rssi '{}': {}", rssi_str, e))?;
+
+    let snr = snr_str.strip_prefix("Gsnr")
+        .ok_or_else(|| format!("Invalid snr format: '{}'", snr_str))?
+        .parse::<i16>()
+        .map_err(|e| format!("Failed to parse snr '{}': {}", snr_str, e))?;
+
+    Ok(FluctusPacketMeta { rssi, snr })
+}
+
+
+fn extract_hexbytes(code: &str) -> Result<String, String> {
     // Trim any newline
     let code = code.trim();
     // Split the code by '/' and take the first part
     let parts: Vec<&str> = code.split('|').collect();
     let code = parts[0].trim();
+
     let first_char = code.chars().nth(0);
     // Check if the first character is 'F'
     if first_char != Some('F') {
@@ -94,7 +133,8 @@ impl FromStr for FluctusPacket {
     type Err = Box<dyn std::error::Error>;
 
     fn from_str(code: &str) -> Result<Self, Self::Err> {
-        let hex_str = strip_code(code)?;
+        let meta = extract_meta(code)?;
+        let hex_str = extract_hexbytes(code)?;
         let bytes = convert_to_bytes(&hex_str);
         FluctusPacket::from_bytes(&bytes)
     }
