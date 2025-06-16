@@ -49,7 +49,7 @@ pub struct FluctusPacket {
     pub user_in1: Option<i16>,
     pub user_in2: Option<i16>,
 }
-
+#[derive(Debug, PartialEq, Eq, Clone, Copy, Serialize)]
 pub struct FluctusPacketMeta {
     pub rssi: i16,
     pub snr: i16,
@@ -64,6 +64,7 @@ impl FromStr for FluctusPacketMeta {
 }
 
 fn extract_meta(code: &str) -> Result<FluctusPacketMeta, String> {
+    let code = code.trim();
     let meta_section = match code.split('|').nth(1) {
         Some(s) => s,
         None => return Err("missing meta section (expected text like Grssi‑65/Gsnr6)".into()),

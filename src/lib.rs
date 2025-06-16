@@ -20,7 +20,7 @@ mod tests {
 
     #[test]
     fn test_provided_packet() {
-        let packet = "FB3E00070100BEDD01000000000000006C00AA89109CFF00650000000000000000000E53000000|Grssi-65/Gsnr6";
+        let packet = "FB3E00070100BEDD01000000000000006C00AA89109CFF00650000000000000000000E53000000|Grssi-65/Gsnr6\n";
         let meta = FluctusPacketMeta::from_str(packet).unwrap();
 
         assert!(meta.rssi == -65);
