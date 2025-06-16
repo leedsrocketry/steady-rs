@@ -1,6 +1,7 @@
 pub mod steady;
 pub use steady::packets::fluctus_packet::FlightStatus;
 pub use steady::packets::fluctus_packet::FluctusPacket;
+pub use steady::packets::fluctus_packet::FluctusPacketMeta;
 pub use steady::packets::fluctus_packet::RollingMessage;
 
 pub use steady::commands::command::Command;
@@ -19,7 +20,12 @@ mod tests {
 
     #[test]
     fn test_provided_packet() {
-        let packet: &'static str = "FB3E00070100BEDD01000000000000006C00AA89109CFF00650000000000000000000E53000000|Grssi-65/Gsnr6";
+        let packet = "FB3E00070100BEDD01000000000000006C00AA89109CFF00650000000000000000000E53000000|Grssi-65/Gsnr6\n";
+        let meta = FluctusPacketMeta::from_str(packet).unwrap();
+
+        assert!(meta.rssi == -65);
+        assert!(meta.snr == 6);
+
         let parsed_packet = FluctusPacket::from_str(packet);
         assert!(
             parsed_packet.is_ok(),
