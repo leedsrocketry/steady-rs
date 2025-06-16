@@ -1,5 +1,5 @@
-use std::str::FromStr;
 use serde::Serialize;
+use std::str::FromStr;
 
 #[derive(Debug, PartialEq, Eq, Clone, Copy, Serialize)]
 pub enum RollingMessage {
@@ -68,26 +68,27 @@ fn extract_meta(code: &str) -> Result<FluctusPacketMeta, String> {
     let meta_section = match code.split('|').nth(1) {
         Some(s) => s,
         None => return Err("missing meta section (expected text like Grssi‑65/Gsnr6)".into()),
-    };  
+    };
     let meta_parts: Vec<&str> = meta_section.split('/').collect();
 
     let rssi_str = meta_parts.get(0).copied().unwrap_or("Grssi0");
     let snr_str = meta_parts.get(1).copied().unwrap_or("Gsnr1");
 
     // Strip prefixes and parse values
-    let rssi = rssi_str.strip_prefix("Grssi")
+    let rssi = rssi_str
+        .strip_prefix("Grssi")
         .ok_or_else(|| format!("Invalid rssi format: '{}'", rssi_str))?
         .parse::<i16>()
         .map_err(|e| format!("Failed to parse rssi '{}': {}", rssi_str, e))?;
 
-    let snr = snr_str.strip_prefix("Gsnr")
+    let snr = snr_str
+        .strip_prefix("Gsnr")
         .ok_or_else(|| format!("Invalid snr format: '{}'", snr_str))?
         .parse::<i16>()
         .map_err(|e| format!("Failed to parse snr '{}': {}", snr_str, e))?;
 
     Ok(FluctusPacketMeta { rssi, snr })
 }
-
 
 fn extract_hexbytes(code: &str) -> Result<String, String> {
     // Trim any newline
