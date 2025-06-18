@@ -6,6 +6,7 @@ pub use steady::packets::fluctus_packet::RollingMessage;
 
 pub use steady::commands::command::Command;
 pub use steady::commands::start::StartCommand;
+pub use steady::commands::arm::ArmCommand;
 pub use steady::responses::response::SteadyReply;
 pub use steady::transport::serial::SerialTransport;
 
