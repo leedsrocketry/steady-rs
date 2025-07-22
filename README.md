@@ -13,3 +13,6 @@ Shoutout to Ulysse from Silicdyne, who created documentation specifically for th
 We are using this to feed live flight data into our custom unified ground station solution.
 
 There is relevant example code in emulated-test/src/main.rs.
+
+### Licence
+Steady-rs uses an MIT licence which broadly allows for any use. We do however ask that if you find steady-rs interesting or useful that you star the repository and send an email to launch@leedsrocketry.co.uk to let us know! This helps us secure future funding.
